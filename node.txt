@@ -1,0 +1,47 @@
+
+var express = require('express');
+var app = express();
+var fs = require("fs");
+   mysql = require('mysql');
+
+var sqlInfo = {
+   host: 'localhost',
+   user: 'root',
+   password: '',
+   database: 'test'
+}
+client = mysql.createConnection(sqlInfo);
+
+
+client.connect();
+
+
+app.get('/createPortal', function (req, res) {
+
+var json = '';
+ var post  = { name: 'Portal'};
+ var query = client.query('insert into portal SET ?', post, function(err, result) {
+
+	console.log(err);
+       
+        json = JSON.stringify(result.insertId);
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+    console.log('JSON-result:', json);  res.end( json );
+       
+ });
+ 
+
+
+})
+var server = app.listen(8081, function () {
+
+  var host = server.address().address
+  var port = server.address().port
+
+  console.log("Example app listening at http://%s:%s", host, port)
+
+})
