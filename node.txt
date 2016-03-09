@@ -15,6 +15,49 @@ client = mysql.createConnection(sqlInfo);
 
 client.connect();
 
+app.get('/retrievePortal/:id', function (req, res) {
+
+var json = '';
+
+    var query = 'SELECT * FROM portal where id = '+req.params.id;
+	console.log(query);
+    client.query(query, function(err, results, fields) {
+       
+        json = JSON.stringify(results);
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+    console.log('JSON-result:', json);  res.end( json );
+       
+        
+    });
+
+
+})
+
+app.get('/deletePortal/:id', function (req, res) {
+
+var json = '';
+
+    var query = 'delete FROM portal where id = '+req.params.id;
+	console.log(query);
+    client.query(query, function(err, results, fields) {
+       
+        json = JSON.stringify(results);
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+    console.log('JSON-result:', json);  res.end( json );
+       
+        
+    });
+
+
+})
 
 app.get('/createPortal', function (req, res) {
 
@@ -22,15 +65,26 @@ var json = '';
  var post  = { name: 'Portal'};
  var query = client.query('insert into portal SET ?', post, function(err, result) {
 
-	console.log(err);
+	console.log(result.insertId);
        
-        json = JSON.stringify(result.insertId);
+     
+
+    var query = 'SELECT * FROM portal where id ='+result.insertId;
+	console.log(query);
+    client.query(query, function(err, results, fields) {
+       
+        json = JSON.stringify(results);
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Origin', '*');
 
     console.log('JSON-result:', json);  res.end( json );
+       
+        
+    });
+	
+	
        
  });
  
